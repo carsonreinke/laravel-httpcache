@@ -61,15 +61,17 @@ class ServiceProvider extends BaseServiceProvider
     	/** @var \Barryvdh\StackMiddleware\StackMiddleware $stack */
         $stack = app('Barryvdh\StackMiddleware\StackMiddleware');
         
-        $stack->bind(
-          'Barryvdh\HttpCache\Middleware\CacheRequests',
-          'Symfony\Component\HttpKernel\HttpCache\HttpCache',
-          [
-            $this->app['http_cache.store'],
-            $this->app['http_cache.esi'],
-            $this->app['http_cache.options']
-          ]
-        );
+        if($this->app['http_cache.enabled']) {
+            $stack->bind(
+              'Barryvdh\HttpCache\Middleware\CacheRequests',
+              'Symfony\Component\HttpKernel\HttpCache\HttpCache',
+              [
+                $this->app['http_cache.store'],
+                $this->app['http_cache.esi'],
+                $this->app['http_cache.options']
+              ]
+            );
+        }
     }
 
 	/**
@@ -79,6 +81,6 @@ class ServiceProvider extends BaseServiceProvider
 	 */
 	public function provides()
 	{
-		return array('http_cache.store', 'http_cache.esi', 'http_cache.cache_dir', 'http_cache.options', 'command.httpcache.clear');
+		return array('http_cache.enabled', 'http_cache.store', 'http_cache.esi', 'http_cache.cache_dir', 'http_cache.options', 'command.httpcache.clear');
 	}
 }
