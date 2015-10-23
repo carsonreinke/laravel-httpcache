@@ -28,7 +28,9 @@ class ServiceProvider extends BaseServiceProvider
         if (function_exists('config_path')) {
             $this->publishes([$configPath => config_path('httpcache.php')], 'config');
         }
-
+        
+        $app['http_cache.enabled'] = $app['config']->get('httpcache.enabled');
+        
         $app['http_cache.options'] = array_replace(
             array(
                 'debug' => $app['config']->get('app.debug'),
